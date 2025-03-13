@@ -22,29 +22,26 @@ db = MySQLConnection(
 db.connect()
 
 def get_cliente(id: Optional[int] = None):
-    if id is not None:
-        query = "SELECT * FROM clientes where id = %s"
-        res = db.fetch_one(query, (id,)) 
-        if res is None:
-            return {}
-        return Cliente(**res)      
+    where = []
+    where.append(' 1=1')
+    if id is not None: 
+        where.append(f" id = {id}")
 
-    if id is None:
-        query = "SELECT * FROM clientes"
-        res = db.fetch_all(query) 
-        if res is None:
-            return {}
-        clientes = [Cliente(**cliente) for cliente in res]
-        return clientes
+    query = "SELECT * FROM clientes where"
+    where_clause = " AND ".join(where)
+
+    query += where_clause
+    res = db.fetch_all(query)
+    agendamento = [Cliente(**ag) for ag in res]
+    return agendamento
 
 
 def set_cliente(cliente: Cliente):
     insert_query = """
-        INSERT INTO clientes (id, nome, endereco, telefone, email) 
-        VALUES (%s, %s, %s, %s, %s)
+        INSERT INTO clientes (nome, endereco, telefone, email) 
+        VALUES (%s, %s, %s, %s)
     """
     ret = db.execute_query(insert_query, (
-        cliente.id, 
         cliente.nome, 
         cliente.endereco, 
         cliente.telefone, 
