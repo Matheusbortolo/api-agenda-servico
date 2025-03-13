@@ -1,5 +1,7 @@
 from fastapi import FastAPI, Request
 from typing import Optional
+from cliente_controller import get_cliente, set_cliente
+from cliente_class import Cliente
 
 app = FastAPI()
 
@@ -17,13 +19,14 @@ async def set_feriado(request: Request):
     return {"message": "feriados!"}
 
 @app.get("/clientes/")
-def read_clientes(id: Optional[int] = None):
-    return {"message": "clientes!"}
+def read_clientes(id: Optional[int] = None):    
+    return {"message": get_cliente(id= id)}
 
 @app.post("/clientes")
 async def set_cliente(request: Request):
     body = await request.json()
-    return {"message": "clientes!"}
+    cliente = Cliente.parse_raw(body)
+    return  {"message": set_cliente(cliente = cliente)}
 
 @app.get("/tipo-servico/")
 def read_tipo_servico(id: Optional[int] = None):
