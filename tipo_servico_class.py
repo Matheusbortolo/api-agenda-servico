@@ -1,12 +1,8 @@
 from pydantic import BaseModel
 from typing import Optional
 
-class Cliente(BaseModel):
+class TipoServico(BaseModel):
     id: Optional[int] = None
     nome: str
-    endereco: str
-    telefone: str
-    email: str
-
-
+    obs: str   
 
